@@ -4,14 +4,18 @@ import os
 
 def execute_sql_script():
     try:
+        # Database connection configuration
         connection = mysql.connector.connect(
-            host='localhost',
-            user='root',  
-            password='', 
-            database='companydb'  
+            host='companysqll.mysql.database.azure.com',
+            user='CompanyServers',  
+            password='Test@123',    
+            database='companydb',
+            port=3306,
+            ssl_ca='DigiCertGlobalRootCA.crt.pem'
         )
 
         if connection.is_connected():
+            print("Successfully connected to MySQL database!")
             cursor = connection.cursor()
             
             # Read and execute the SQL script

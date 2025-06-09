@@ -1,54 +1,90 @@
-# Database Automation and CI/CD Pipeline
+# Assignment 2: Database Automation and CI/CD Pipeline
 
-This repository contains scripts and workflows for automating database schema changes and implementing CI/CD for database deployment.
+## Overview
+This project implements database schema automation and CI/CD pipeline for Azure MySQL database deployment.
 
-## Project Structure
+## Step-by-Step Implementation
 
-- `create_projects_table.sql`: SQL script for creating and modifying the projects table
-- `add_departments.sql`: SQL script for creating the departments table
-- `execute_sql.py`: Python script to execute SQL commands
-- `.github/workflows/ci_cd_pipeline.yml`: GitHub Actions workflow for database deployment
-- `requirements.txt`: Python dependencies
+### 1. Azure MySQL Setup
+1. Create Azure MySQL Server:
+   - Server name: companysqll
+   - Database name: companydb
+   - Username: CompanyServers
+   - Password: companyservers@123
 
-## Setup Instructions
+2. Configure Firewall:
+   - Allow your IP address
+   - Enable public access
 
-1. Install Python dependencies:
-   ```bash
+3. Download SSL Certificate:
+   - Save as DigiCertGlobalRootCA.crt.pem
+
+### 2. Project Structure
+- .github/workflows/ci_cd_pipeline.yml
+- create_projects_table.sql
+- add_departments.sql
+- execute_sql.py
+- requirements.txt
+- DigiCertGlobalRootCA.crt.pem
+
+
+### 3. Database Schema Implementation
+
+#### Projects Table (create_projects_table.sql)
+```sql
+CREATE TABLE IF NOT EXISTS projects (
+    project_id INT AUTO_INCREMENT PRIMARY KEY,
+    project_name VARCHAR(255) NOT NULL,
+    start_date DATE,
+    end_date DATE
+);
+
+ALTER TABLE projects
+ADD COLUMN budget DECIMAL(10, 2);
+```
+
+#### Departments Table (add_departments.sql)
+```sql
+CREATE TABLE IF NOT EXISTS departments (
+    department_id INT AUTO_INCREMENT PRIMARY KEY,
+    department_name VARCHAR(255) NOT NULL,
+    location VARCHAR(255)
+);
+```
+
+### 4. Python Implementation (execute_sql.py)
+- Connects to Azure MySQL using SSL
+- Executes SQL scripts
+- Handles errors and commits changes
+
+### 5. CI/CD Pipeline Setup
+
+#### GitHub Actions Workflow (.github/workflows/ci_cd_pipeline.yml)
+- Triggers on push to main branch
+- Sets up Python environment
+- Installs dependencies
+- Executes SQL scripts
+
+#### GitHub Secrets Configuration
+DB_HOST: companysqll.mysql.database.azure.com
+DB_USER: CompanyServers
+DB_PASSWORD: Test@123
+DB_NAME: companydb
+
+### 6. Testing Process
+
+#### Local Testing
+1. Install dependencies:
    pip install -r requirements.txt
-   ```
 
-2. Configure database connection:
-   - Update the database connection parameters in `execute_sql.py`
-   - Set up GitHub repository secrets for CI/CD:
-     - DB_HOST
-     - DB_USER
-     - DB_PASSWORD
-     - DB_NAME
+2. Run the script:
+   python execute_sql.py
 
-## Azure MySQL Setup
+3. Verify in Azure MySQL:
+   - Check projects table
+   - Check departments table
 
-1. Create an Azure MySQL Database:
-   - Log in to Azure Portal
-   - Create a new MySQL server
-   - Create a new database named 'companydb'
-   - Configure firewall rules
-   - Note down the connection details
-
-2. Configure GitHub Secrets:
-   - Go to your GitHub repository
-   - Navigate to Settings > Secrets
-   - Add the following secrets:
-     - DB_HOST: Your Azure MySQL server hostname
-     - DB_USER: Database username
-     - DB_PASSWORD: Database password
-     - DB_NAME: companydb
-
-## Testing the Workflow
-
-1. Push changes to the main branch
-2. Monitor the GitHub Actions workflow
-3. Verify the database changes in Azure MySQL
-
-## Documentation
-
-For detailed documentation including screenshots and step-by-step instructions, please refer to the `documentation.pdf` file in the repository. 
+#### CI/CD Testing
+1. Push changes to main branch
+2. Monitor GitHub Actions workflow
+3. Verify database changes
