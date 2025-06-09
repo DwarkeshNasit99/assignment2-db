@@ -29,38 +29,7 @@ jobs:
         DB_USER: ${{ secrets.DB_USER }}
         DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         DB_NAME: ${{ secrets.DB_NAME }}
-      run: |
-        # First, execute the projects table creation
-        python execute_sql.py
-        
-        # Then, execute the departments table creation
-        python -c "
-        import mysql.connector
-        from mysql.connector import Error
-        try:
-            connection = mysql.connector.connect(
-                host='${{ secrets.DB_HOST }}',
-                user='${{ secrets.DB_USER }}',
-                password='${{ secrets.DB_PASSWORD }}',
-                database='${{ secrets.DB_NAME }}',
-                port=3306,
-                ssl_ca='DigiCertGlobalRootCA.crt.pem'
-            )
-            if connection.is_connected():
-                cursor = connection.cursor()
-                with open('add_departments.sql', 'r') as sql_file:
-                    sql_commands = sql_file.read().split(';')
-                    for command in sql_commands:
-                        if command.strip():
-                            cursor.execute(command)
-                            print(f'Successfully executed: {command.strip()}')
-                connection.commit()
-                print('All changes committed successfully!')
-        except Error as e:
-            print(f'Error: {e}')
-        finally:
-            if 'connection' in locals() and connection.is_connected():
-                cursor.close()
-                connection.close()
-                print('MySQL connection closed.')
-        " 
+      run: python execute_sql.py
+    
+    - name: Execute departments SQL script
+      run: python execute_departments_sql.py 
