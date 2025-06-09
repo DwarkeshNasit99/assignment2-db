@@ -3,7 +3,7 @@
 ## Overview
 This project implements database schema automation and CI/CD pipeline for Azure MySQL database deployment.
 
-## Step-by-Step Implementation
+## Implementation
 
 ### 1. Azure MySQL Setup
 1. Create Azure MySQL Server:
